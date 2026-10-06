@@ -1,0 +1,15 @@
+{
+  "name": "node-red-modulo-6",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Proyecto educativo Node-RED: dashboard de motor simulado",
+  "dependencies": {
+    "node-red-dashboard": "3.6.5"
+  },
+  "node-red": {
+    "settings": {
+      "flowFile": "flows.json",
+      "credentialsFile": "flows_cred.json"
+    }
+  }
+}
