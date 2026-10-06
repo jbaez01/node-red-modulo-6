@@ -1,0 +1,203 @@
+[
+  {
+    "id": "m5_motor_flow",
+    "type": "tab",
+    "label": "Modulo 5 - Dashboard motor",
+    "disabled": false,
+    "info": "Control SIMULADO de motor. Requiere node-red-dashboard (dashboard clasico). Abrir /ui. Botones marcha y parada; LED y grafico animado. Sin salida a PLC o motor real."
+  },
+  {
+    "id": "m5_ui_tab",
+    "type": "ui_tab",
+    "name": "Control de motor",
+    "icon": "settings",
+    "order": 1,
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "m5_group",
+    "type": "ui_group",
+    "name": "Motor M1 - Simulacion",
+    "tab": "m5_ui_tab",
+    "order": 1,
+    "disp": true,
+    "width": "8",
+    "collapse": false
+  },
+  {
+    "id": "m5_image",
+    "type": "ui_template",
+    "z": "m5_motor_flow",
+    "name": "Imagen del motor",
+    "x": 770,
+    "y": 80,
+    "wires": [
+      []
+    ],
+    "group": "m5_group",
+    "order": 1,
+    "width": 8,
+    "height": 5,
+    "format": "<style>\n.motor-picture { text-align:center; padding:12px; }\n.motor-picture svg { width:100%; max-width:360px; height:200px; }\n.motor-picture .spinning { transform-origin:286px 98px; animation:m5spin 1s linear infinite; }\n@keyframes m5spin { to { transform:rotate(360deg); } }\n</style>\n<div class=\"motor-picture\">\n<svg viewBox=\"0 0 360 200\" role=\"img\" aria-label=\"Imagen de un motor electrico simulado\">\n<rect x=\"48\" y=\"60\" width=\"218\" height=\"88\" rx=\"18\" fill=\"#2563eb\" stroke=\"#163968\" stroke-width=\"4\"/>\n<rect x=\"93\" y=\"32\" width=\"78\" height=\"32\" rx=\"5\" fill=\"#1e40af\"/>\n<path d=\"M78 68v72 M103 68v72 M128 68v72 M153 68v72 M178 68v72 M203 68v72 M228 68v72\" stroke=\"#93c5fd\" stroke-width=\"6\"/>\n<rect x=\"64\" y=\"148\" width=\"35\" height=\"15\" fill=\"#334155\"/><rect x=\"213\" y=\"148\" width=\"35\" height=\"15\" fill=\"#334155\"/>\n<rect x=\"37\" y=\"163\" width=\"247\" height=\"9\" rx=\"3\" fill=\"#64748b\"/>\n<rect x=\"266\" y=\"91\" width=\"52\" height=\"14\" rx=\"4\" fill=\"#94a3b8\"/>\n<g ng-class=\"{'spinning':msg.payload.running}\"><circle cx=\"286\" cy=\"98\" r=\"24\" fill=\"#cbd5e1\" stroke=\"#475569\" stroke-width=\"3\"/><path d=\"M286 76v44 M264 98h44\" stroke=\"#475569\" stroke-width=\"5\"/></g>\n</svg>\n<div style=\"font-weight:600\">Motor M1</div>\n<div style=\"color:#64748b;font-size:13px\">Simulacion educativa · sin conexion a equipos</div>\n</div>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local"
+  },
+  {
+    "id": "m5_led",
+    "type": "ui_template",
+    "z": "m5_motor_flow",
+    "name": "LED de estado",
+    "x": 770,
+    "y": 320,
+    "wires": [
+      []
+    ],
+    "group": "m5_group",
+    "order": 4,
+    "width": 8,
+    "height": 2,
+    "format": "<div style=\"display:flex;align-items:center;gap:14px;padding:18px;font-family:Arial,sans-serif\" role=\"status\" aria-live=\"polite\">\n<span aria-label=\"LED de estado\" ng-style=\"{'background-color':msg.payload.running ? '#22c55e' : '#64748b','box-shadow':msg.payload.running ? '0 0 16px #22c55e' : 'none'}\" style=\"display:inline-block;width:28px;height:28px;border-radius:50%;border:3px solid #e2e8f0\"></span>\n<div><strong>{{msg.payload.running ? 'EN MARCHA' : 'DETENIDO'}}</strong><div style=\"font-size:12px;color:#64748b\">{{msg.payload.updated}}</div></div>\n</div>",
+    "storeOutMessages": true,
+    "fwdInMessages": false,
+    "resendOnRefresh": true,
+    "templateScope": "local"
+  },
+  {
+    "id": "m5_start",
+    "type": "ui_button",
+    "z": "m5_motor_flow",
+    "name": "Boton marcha",
+    "x": 190,
+    "y": 160,
+    "wires": [
+      [
+        "m5_state"
+      ]
+    ],
+    "group": "m5_group",
+    "order": 2,
+    "width": 4,
+    "height": 1,
+    "passthru": false,
+    "label": "MARCHA",
+    "tooltip": "Iniciar motor simulado",
+    "color": "#ffffff",
+    "bgcolor": "#15803d",
+    "className": "",
+    "icon": "play_arrow",
+    "payload": "true",
+    "payloadType": "bool",
+    "topic": "motor/start",
+    "topicType": "str"
+  },
+  {
+    "id": "m5_stop",
+    "type": "ui_button",
+    "z": "m5_motor_flow",
+    "name": "Boton parada",
+    "x": 190,
+    "y": 240,
+    "wires": [
+      [
+        "m5_state"
+      ]
+    ],
+    "group": "m5_group",
+    "order": 3,
+    "width": 4,
+    "height": 1,
+    "passthru": false,
+    "label": "PARADA",
+    "tooltip": "Detener motor simulado",
+    "color": "#ffffff",
+    "bgcolor": "#b91c1c",
+    "className": "",
+    "icon": "stop",
+    "payload": "false",
+    "payloadType": "bool",
+    "topic": "motor/stop",
+    "topicType": "str"
+  },
+  {
+    "id": "m5_init",
+    "type": "inject",
+    "z": "m5_motor_flow",
+    "name": "Estado inicial",
+    "x": 180,
+    "y": 80,
+    "wires": [
+      [
+        "m5_state"
+      ]
+    ],
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "payload": "",
+    "payloadType": "date",
+    "topic": "motor/sync",
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.3
+  },
+  {
+    "id": "m5_connect",
+    "type": "ui_ui_control",
+    "z": "m5_motor_flow",
+    "name": "Sincronizar al conectar",
+    "x": 190,
+    "y": 320,
+    "wires": [
+      [
+        "m5_state"
+      ]
+    ],
+    "events": "connect"
+  },
+  {
+    "id": "m5_state",
+    "type": "function",
+    "z": "m5_motor_flow",
+    "name": "Control y estado simulado",
+    "x": 490,
+    "y": 160,
+    "wires": [
+      [
+        "m5_image",
+        "m5_led",
+        "m5_debug"
+      ]
+    ],
+    "func": "let running = flow.get(\"m5_motor_running\") === true;\nif (msg.topic === \"motor/start\") { running = true; }\nelse if (msg.topic === \"motor/stop\") { running = false; }\nflow.set(\"m5_motor_running\", running);\ndelete msg.socketid;\nmsg.payload = {running, state:running ? \"EN MARCHA\" : \"DETENIDO\", updated:new Date().toLocaleString(\"es-CL\")};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": []
+  },
+  {
+    "id": "m5_debug",
+    "type": "debug",
+    "z": "m5_motor_flow",
+    "name": "Estado motor M1",
+    "x": 770,
+    "y": 440,
+    "wires": [],
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg"
+  }
+]
